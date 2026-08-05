@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "memberships",
+  "info": {
+    "singularName": "membership",
+    "pluralName": "memberships",
+    "displayName": "Adhésion",
+    "description": "Demandes d'adhésion à l'association"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullName": {
+      "type": "string",
+      "minLength": 3,
+      "required": true
+    },
+    "cin": {
+      "type": "string",
+      "minLength": 7,
+      "maxLength": 8,
+      "required": true,
+      "regex": "[A-Z]{1,2}\\d{6}"
+    },
+    "phone": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 10,
+      "required": true,
+      "regex": "0[67]\\d{8}"
+    },
+    "email": {
+      "type": "email",
+      "required": true,
+      "unique": false
+    },
+    "address": {
+      "type": "string"
+    },
+    "interestedInEnvironment": {
+      "type": "boolean",
+      "default": false
+    },
+    "interestedInInfrastructure": {
+      "type": "boolean",
+      "default": false
+    },
+    "interestedInSocial": {
+      "type": "boolean",
+      "default": false
+    },
+    "interestedInEducation": {
+      "type": "boolean",
+      "default": false
+    },
+    "engagementType": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "active",
+        "support",
+        "occasional"
+      ]
+    },
+    "message": {
+      "type": "text",
+      "maxLength": 300,
+      "required": false
+    },
+    "statusType": {
+      "type": "enumeration",
+      "private": true,
+      "default": "pending",
+      "enum": [
+        "pending",
+        "accepted",
+        "refused"
+      ]
+    }
+  }
+}

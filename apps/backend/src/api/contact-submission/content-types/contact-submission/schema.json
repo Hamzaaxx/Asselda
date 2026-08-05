@@ -1,0 +1,55 @@
+{
+  "kind": "collectionType",
+  "collectionName": "contact-submissions",
+  "info": {
+    "singularName": "contact-submission",
+    "pluralName": "contact-submissions",
+    "displayName": "Contact",
+    "description": "Soumissions du formulaire de contact"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fullName": {
+      "type": "string",
+      "minLength": 3,
+      "required": true
+    },
+    "email": {
+      "type": "email",
+      "required": true
+    },
+    "phone": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 10,
+      "required": false,
+      "regex": "0[67]\\d{8}"
+    },
+    "subject": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "general",
+        "partnership",
+        "donation",
+        "membership",
+        "volunteering",
+        "press",
+        "other"
+      ]
+    },
+    "message": {
+      "type": "text",
+      "maxLength": 1000,
+      "required": true
+    },
+    "read": {
+      "type": "boolean",
+      "private": true,
+      "default": false
+    }
+  }
+}
