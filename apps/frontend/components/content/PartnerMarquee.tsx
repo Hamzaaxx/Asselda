@@ -1,6 +1,5 @@
-import Image from "next/image";
-
 import type { Partner } from "@/lib/cms/types";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 type PartnerMarqueeProps = {
 	partners: Partner[];
@@ -45,26 +44,39 @@ export function PartnerMarquee({ partners }: PartnerMarqueeProps) {
 }
 
 function LogoItem({ partner, ariaHidden = false }: { partner: Partner; ariaHidden?: boolean }) {
+	/*
+	 * When a logo is absent or fails to load, the partner's name stands in. The
+	 * strip stays legible and on-brand rather than filling with broken-image
+	 * icons — which is the live situation, as none of the ten logos currently
+	 * resolve (see docs/AUDIT-AND-ROADMAP.md).
+	 */
+	const wordmark = (
+		<span className="text-center text-sm font-semibold leading-tight text-sand-600">
+			{partner.name}
+		</span>
+	);
+
 	return (
 		<li
 			aria-hidden={ariaHidden || undefined}
 			className={
-				"flex h-20 w-36 shrink-0 items-center justify-center" +
+				"flex h-20 w-36 shrink-0 items-center justify-center px-2" +
 				// With the animation off the strip becomes a static row, so the
 				// duplicate pass would just show every logo twice.
 				(ariaHidden ? " motion-reduce:hidden" : "")
 			}>
 			{partner.logo ? (
-				<Image
+				<ImageWithFallback
 					src={partner.logo.url}
 					alt={ariaHidden ? "" : partner.name}
 					width={partner.logo.width}
 					height={partner.logo.height}
 					sizes="144px"
+					fallback={wordmark}
 					className="max-h-16 w-auto object-contain opacity-80 transition-opacity duration-300 hover:opacity-100"
 				/>
 			) : (
-				<span className="text-sm font-semibold text-sand-600">{partner.name}</span>
+				wordmark
 			)}
 		</li>
 	);

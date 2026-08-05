@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { ImageOff } from "lucide-react";
 
 import type { CmsImage } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
+import { ImageWithFallback } from "./ImageWithFallback";
 
 type CmsPictureProps = {
 	image: CmsImage | null;
@@ -31,10 +31,14 @@ const ratios = {
 /**
  * CMS media in a fixed frame.
  *
- * Handles the two cases the previous implementation crashed on: a missing
- * `imageCover` (`API_URL + undefined`) and a null `alternativeText` rendering as
- * `alt="null"`. A null image becomes a neutral placeholder instead of a broken
- * icon, and `alt` is guaranteed to be a string by the normaliser.
+ * Covers all three ways CMS media goes wrong:
+ *   - the field is missing entirely (the previous code built `API_URL + undefined`)
+ *   - `alternativeText` is null (previously rendered as the string "null")
+ *   - the URL is present but the file 404s — currently true for every partner
+ *     logo and news cover, see docs/AUDIT-AND-ROADMAP.md
+ *
+ * All three land on the same neutral placeholder, which keeps the frame's size
+ * so a failure causes no layout shift.
  */
 export function CmsPicture({
 	image,
@@ -44,35 +48,33 @@ export function CmsPicture({
 	sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
 	className,
 }: CmsPictureProps) {
-	if (!image) {
-		return (
-			<div
-				className={cn(
-					"flex items-center justify-center bg-sand-200 text-sand-500",
-					ratios[ratio],
-					className,
-				)}>
-				<ImageOff className="size-8" aria-hidden="true" />
-			</div>
-		);
-	}
+	const placeholder = (
+		<span className="absolute inset-0 flex items-center justify-center bg-sand-200 text-sand-500">
+			<ImageOff className="size-8" aria-hidden="true" />
+		</span>
+	);
 
 	return (
 		<div className={cn("relative overflow-hidden bg-sand-200", ratios[ratio], className)}>
-			<Image
-				src={image.url}
-				alt={image.alt}
-				fill
-				sizes={sizes}
-				priority={priority}
-				className={cn(
-					"object-cover",
-					zoomOnHover &&
-						"transition-transform duration-500 ease-out-soft " +
-							"group-hover/card:scale-105 group-focus-within/card:scale-105 " +
-							"motion-reduce:transition-none motion-reduce:group-hover/card:scale-100",
-				)}
-			/>
+			{image ? (
+				<ImageWithFallback
+					src={image.url}
+					alt={image.alt}
+					fill
+					sizes={sizes}
+					priority={priority}
+					fallback={placeholder}
+					className={cn(
+						"object-cover",
+						zoomOnHover &&
+							"transition-transform duration-500 ease-out-soft " +
+								"group-hover/card:scale-105 group-focus-within/card:scale-105 " +
+								"motion-reduce:transition-none motion-reduce:group-hover/card:scale-100",
+					)}
+				/>
+			) : (
+				placeholder
+			)}
 		</div>
 	);
 }

@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 
 import type { Partner } from "@/lib/cms/types";
 import type { Dictionary } from "@/lib/i18n";
 import { Card } from "@/components/ui/Card";
+import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
 
 type PartnerCardProps = {
 	partner: Partner;
@@ -11,6 +11,17 @@ type PartnerCardProps = {
 };
 
 export function PartnerCard({ partner, dictionary }: PartnerCardProps) {
+	/*
+	 * Monogram shown when there is no logo, or when the logo fails to load.
+	 * `aria-hidden` because the partner's full name is the adjacent heading, so
+	 * announcing the initials as well would just be noise.
+	 */
+	const monogram = (
+		<span aria-hidden="true" className="font-serif text-xl font-semibold text-forest-700">
+			{partner.name.slice(0, 2).toUpperCase()}
+		</span>
+	);
+
 	return (
 		<Card as="article" className="h-full gap-4 p-6">
 			<div className="flex items-start gap-4">
@@ -18,20 +29,17 @@ export function PartnerCard({ partner, dictionary }: PartnerCardProps) {
 				    fixed white frame and scale to fit rather than being cropped. */}
 				<div className="flex size-20 shrink-0 items-center justify-center rounded-card border border-sand-200 bg-white p-2">
 					{partner.logo ? (
-						<Image
+						<ImageWithFallback
 							src={partner.logo.url}
 							alt={`${partner.name} — ${dictionary.partners.title}`}
 							width={partner.logo.width}
 							height={partner.logo.height}
 							sizes="80px"
+							fallback={monogram}
 							className="max-h-full w-auto object-contain"
 						/>
 					) : (
-						<span
-							aria-hidden="true"
-							className="font-serif text-xl font-semibold text-forest-700">
-							{partner.name.slice(0, 2).toUpperCase()}
-						</span>
+						monogram
 					)}
 				</div>
 
