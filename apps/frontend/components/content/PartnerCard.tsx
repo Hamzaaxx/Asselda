@@ -39,24 +39,37 @@ export function PartnerCard({ partner, dictionary }: PartnerCardProps) {
 	 */
 	const bundled = localPartnerLogo(partner.name);
 
+	/*
+	 * `fill` + `object-contain` rather than `max-h-full w-auto`.
+	 *
+	 * These logos range from 170x202 portrait to 1147x627 landscape. Sizing by
+	 * height alone makes the rendered box depend on each logo's aspect ratio, so
+	 * wide marks overflow the frame while tall ones sit tiny inside it. Filling
+	 * a fixed frame and containing within it gives every logo the same footprint
+	 * whatever its proportions.
+	 */
+	const logoClass = "object-contain p-2";
+
 	const logo = bundled ? (
 		<ImageWithFallback
 			src={bundled}
 			alt={logoAlt}
+			fill
 			sizes="80px"
-			placeholder="blur"
+			/* No blur placeholder: with object-contain it paints a full-bleed
+			   blurred rectangle behind a contained logo, which reads as a smear
+			   in a white frame. These files are a few kilobytes optimised. */
 			fallback={monogram}
-			className="max-h-full w-auto object-contain"
+			className={logoClass}
 		/>
 	) : partner.logo ? (
 		<ImageWithFallback
 			src={partner.logo.url}
 			alt={logoAlt}
-			width={partner.logo.width}
-			height={partner.logo.height}
+			fill
 			sizes="80px"
 			fallback={monogram}
-			className="max-h-full w-auto object-contain"
+			className={logoClass}
 		/>
 	) : (
 		monogram
@@ -67,7 +80,9 @@ export function PartnerCard({ partner, dictionary }: PartnerCardProps) {
 			<div className="flex items-start gap-4">
 				{/* Logos are supplied at wildly different aspect ratios, so they sit in a
 				    fixed white frame and scale to fit rather than being cropped. */}
-				<div className="flex size-20 shrink-0 items-center justify-center rounded-card border border-sand-200 bg-white p-2">
+				{/* `relative` anchors the filled logo; the frame keeps its size whether
+				    a logo, a CMS image or the monogram ends up inside it. */}
+				<div className="relative flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-card border border-sand-200 bg-white">
 					{logo}
 				</div>
 

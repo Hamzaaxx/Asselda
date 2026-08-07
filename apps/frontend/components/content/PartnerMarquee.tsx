@@ -57,17 +57,20 @@ function LogoItem({ partner, ariaHidden = false }: { partner: Partner; ariaHidde
 		</span>
 	);
 
-	/* Bundled logo preferred, then the CMS one, then the name — see PartnerCard. */
+	/* Bundled logo preferred, then the CMS one, then the name — see PartnerCard.
+	   `fill` + `object-contain` so every logo occupies the same slot regardless
+	   of its proportions. */
 	const bundled = localPartnerLogo(partner.name);
 	const imageClass =
-		"max-h-16 w-auto object-contain opacity-80 transition-opacity duration-300 hover:opacity-100";
+		"object-contain p-3 opacity-80 transition-opacity duration-300 hover:opacity-100";
 
 	const logo = bundled ? (
 		<ImageWithFallback
 			src={bundled}
 			alt={ariaHidden ? "" : partner.name}
+			fill
 			sizes="144px"
-			placeholder="blur"
+			/* See PartnerCard — blur behind a contained logo reads as a smear. */
 			fallback={wordmark}
 			className={imageClass}
 		/>
@@ -75,8 +78,7 @@ function LogoItem({ partner, ariaHidden = false }: { partner: Partner; ariaHidde
 		<ImageWithFallback
 			src={partner.logo.url}
 			alt={ariaHidden ? "" : partner.name}
-			width={partner.logo.width}
-			height={partner.logo.height}
+			fill
 			sizes="144px"
 			fallback={wordmark}
 			className={imageClass}
@@ -89,7 +91,7 @@ function LogoItem({ partner, ariaHidden = false }: { partner: Partner; ariaHidde
 		<li
 			aria-hidden={ariaHidden || undefined}
 			className={
-				"flex h-20 w-36 shrink-0 items-center justify-center px-2" +
+				"relative flex h-20 w-36 shrink-0 items-center justify-center px-2" +
 				// With the animation off the strip becomes a static row, so the
 				// duplicate pass would just show every logo twice.
 				(ariaHidden ? " motion-reduce:hidden" : "")
