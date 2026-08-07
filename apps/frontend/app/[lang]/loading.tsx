@@ -1,7 +1,7 @@
 import { getDictionary } from "@/lib/i18n";
 import { defaultLocale } from "@/lib/i18n/config";
 import { Container } from "@/components/ui/Container";
-import { CardGridSkeleton, HeroSkeleton } from "@/components/ui/Skeleton";
+import { FeatureAndRowsSkeleton, HeroSkeleton } from "@/components/ui/Skeleton";
 
 /**
  * Shown while a route's data resolves.
@@ -26,7 +26,7 @@ export default function Loading() {
 			<HeroSkeleton />
 
 			<Container size="wide" className="py-16 sm:py-24">
-				<CardGridSkeleton />
+				<FeatureAndRowsSkeleton />
 			</Container>
 		</>
 	);

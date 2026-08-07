@@ -9,7 +9,8 @@ import type { Locale } from "@/lib/i18n/config";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPills, type FilterOption } from "@/components/ui/FilterPills";
-import { ProjectCard } from "./ProjectCard";
+import { FeaturedProject } from "./FeaturedProject";
+import { ProjectRow } from "./ProjectRow";
 
 type StatusFilter = ProjectStatus | "all";
 type DomainFilter = ProjectDomain | "all";
@@ -116,15 +117,31 @@ export function ProjectsExplorer({ projects, locale, dictionary }: ProjectsExplo
 			</p>
 
 			{filtered.length > 0 ? (
-				<ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				/*
+				 * Unfiltered, the first project leads at full editorial weight and the
+				 * rest follow as alternating rows. Once a filter is applied the lead
+				 * treatment is dropped: the first match is not necessarily the
+				 * association's landmark project, and promoting it would imply a
+				 * significance the filter never claimed.
+				 */
+				<ul className="flex flex-col gap-8">
 					{filtered.map((project, index) => (
-						<li key={project.documentId} className="flex">
-							<ProjectCard
-								project={project}
-								locale={locale}
-								dictionary={dictionary}
-								priority={index < 3}
-							/>
+						<li key={project.documentId}>
+							{!filtersActive && index === 0 ? (
+								<FeaturedProject
+									project={project}
+									locale={locale}
+									dictionary={dictionary}
+									priority
+								/>
+							) : (
+								<ProjectRow
+									project={project}
+									locale={locale}
+									dictionary={dictionary}
+									reversed={(filtersActive ? index : index - 1) % 2 === 1}
+								/>
+							)}
 						</li>
 					))}
 				</ul>

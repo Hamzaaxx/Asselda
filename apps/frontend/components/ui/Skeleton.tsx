@@ -41,6 +41,46 @@ export function CardGridSkeleton({ count = 6 }: { count?: number }) {
 }
 
 /**
+ * Mirrors the feature-plus-rows layout the content pages actually use.
+ *
+ * A loading state that resolves into a different shape reads as a jump. This
+ * one lands roughly where the real content does.
+ */
+export function FeatureAndRowsSkeleton({ rows = 3 }: { rows?: number }) {
+	return (
+		<div className="flex flex-col gap-8">
+			{/* Feature: image beside a block of text on wide screens. */}
+			<div className="overflow-hidden rounded-card bg-white ring-1 ring-sand-300/70">
+				<div className="grid lg:grid-cols-[1.15fr_1fr]">
+					<Skeleton className="aspect-[4/3] rounded-none" />
+					<div className="flex flex-col gap-4 p-7 sm:p-10">
+						<Skeleton className="h-5 w-28 rounded-pill" />
+						<Skeleton className="h-9 w-4/5" />
+						<Skeleton className="h-4 w-full" />
+						<Skeleton className="h-4 w-11/12" />
+						<Skeleton className="h-4 w-2/3" />
+					</div>
+				</div>
+			</div>
+
+			{Array.from({ length: rows }, (_, index) => (
+				<div
+					key={index}
+					className="flex flex-col overflow-hidden rounded-card bg-white ring-1 ring-sand-300/70 lg:flex-row">
+					<Skeleton className="aspect-[3/2] rounded-none lg:w-[42%]" />
+					<div className="flex flex-1 flex-col gap-3 p-6 sm:p-8">
+						<Skeleton className="h-5 w-24 rounded-pill" />
+						<Skeleton className="h-7 w-3/4" />
+						<Skeleton className="h-4 w-full" />
+						<Skeleton className="h-4 w-1/2" />
+					</div>
+				</div>
+			))}
+		</div>
+	);
+}
+
+/**
  * The hero band, drawn in its final colour rather than as grey boxes.
  *
  * The header and hero are identical on every page, so painting them

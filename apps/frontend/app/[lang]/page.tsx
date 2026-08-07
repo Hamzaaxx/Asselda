@@ -5,13 +5,12 @@ import { getDictionary } from "@/lib/i18n";
 import { isLocale, localizePath, type Locale } from "@/lib/i18n/config";
 import { FOUNDING_YEAR, IMPACT_BENEFICIARIES } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { HomeHero } from "@/components/content/HomeHero";
 import { StatsBand } from "@/components/content/StatsBand";
-import { ProjectCard } from "@/components/content/ProjectCard";
-import { ArticleCard } from "@/components/content/ArticleCard";
+import { FeaturedProject } from "@/components/content/FeaturedProject";
+import { ArticleRow } from "@/components/content/ArticleRow";
 import { PartnerMarquee } from "@/components/content/PartnerMarquee";
 import { generateLocaleParams } from "@/lib/i18n/static-params";
 
@@ -20,15 +19,15 @@ export const generateStaticParams = generateLocaleParams;
 
 const domainIcons = [Leaf, Droplets, HeartHandshake] as const;
 
-/** Same colour coding the project and activity grids use for these domains. */
-const domainAccents = ["environment", "sanitation", "social"] as const;
-
-/** Tints the icon chip to match each card's accent rule. */
+/** Tints the icon chip to match each column's accent. */
 const domainIconChips = [
 	"bg-forest-100 text-forest-700",
 	"bg-sky-brand/10 text-sky-brand",
 	"bg-gold-brand/10 text-gold-brand",
 ] as const;
+
+/** Short rule under each heading, in the same three colours. */
+const domainRules = ["bg-forest-600", "bg-sky-brand", "bg-gold-brand"] as const;
 
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
 	const { lang } = await params;
@@ -83,22 +82,29 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 					align="center"
 					className="items-center"
 				/>
-				<ul className="grid gap-6 md:grid-cols-3">
+				{/*
+				 * Columns divided by hairlines rather than boxed cards. The sections
+				 * below are card-based; keeping this one open stops the homepage
+				 * reading as one long grid.
+				 */}
+				<ul className="grid gap-10 md:grid-cols-3 md:gap-0">
 					{domains.map((domain, index) => {
 						const Icon = domainIcons[index];
 						return (
-							<Card
-								as="li"
+							<li
 								key={domain.title}
-								accent={domainAccents[index]}
-								className="items-start gap-4 p-8 pt-9">
+								className="flex flex-col gap-3 md:border-e md:border-sand-300 md:px-8 md:first:ps-0 md:last:border-e-0 md:last:pe-0">
 								<span
 									className={`flex size-12 items-center justify-center rounded-card ${domainIconChips[index]}`}>
 									<Icon className="size-6" aria-hidden="true" />
 								</span>
 								<h3 className="text-xl text-forest-900">{domain.title}</h3>
+								<span
+									aria-hidden="true"
+									className={`h-0.5 w-8 rounded-full ${domainRules[index]}`}
+								/>
 								<p className="text-base leading-relaxed text-ink-muted">{domain.body}</p>
-							</Card>
+							</li>
 						);
 					})}
 				</ul>
@@ -118,14 +124,18 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 					</ButtonLink>
 				</div>
 
+				{/*
+				 * One project at full weight rather than three equal cards. The
+				 * flagship sorts first, so this is the 12 MDH sanitation station —
+				 * the association's landmark work, and a far stronger opening than a
+				 * row of thumbnails.
+				 */}
 				{featuredProjects.length > 0 ? (
-					<ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-						{featuredProjects.map((project) => (
-							<li key={project.documentId} className="flex">
-								<ProjectCard project={project} locale={locale} dictionary={dictionary} />
-							</li>
-						))}
-					</ul>
+					<FeaturedProject
+						project={featuredProjects[0]}
+						locale={locale}
+						dictionary={dictionary}
+					/>
 				) : (
 					<EmptyState
 						title={dictionary.empty.title}
@@ -150,11 +160,13 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 					</ButtonLink>
 				</div>
 
+				{/* A divided list, so this section does not repeat the shape of the
+				    project feature immediately above it. */}
 				{latestArticles.length > 0 ? (
-					<ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+					<ul className="divide-y divide-sand-300 border-y border-sand-300">
 						{latestArticles.map((article) => (
-							<li key={article.documentId} className="flex">
-								<ArticleCard article={article} locale={locale} dictionary={dictionary} />
+							<li key={article.documentId}>
+								<ArticleRow article={article} locale={locale} dictionary={dictionary} />
 							</li>
 						))}
 					</ul>

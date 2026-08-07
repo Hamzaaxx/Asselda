@@ -9,7 +9,8 @@ import type { Locale } from "@/lib/i18n/config";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPills, type FilterOption } from "@/components/ui/FilterPills";
-import { ArticleCard } from "./ArticleCard";
+import { FeaturedArticle } from "./FeaturedArticle";
+import { ArticleRow } from "./ArticleRow";
 
 type CategoryFilter = ArticleCategory | "all";
 
@@ -115,18 +116,31 @@ export function ArticlesExplorer({ articles, locale, dictionary }: ArticlesExplo
 			) : null}
 
 			{filtered.length > 0 ? (
-				<ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					{filtered.map((article, index) => (
-						<li key={article.documentId} className="flex">
-							<ArticleCard
-								article={article}
-								locale={locale}
-								dictionary={dictionary}
-								priority={index < 3}
-							/>
-						</li>
-					))}
-				</ul>
+				/*
+				 * The newest article leads; the rest follow as a divided list. When a
+				 * search or filter is active every match is shown at the same weight,
+				 * because the top match is a result, not an editorial choice.
+				 */
+				<div className="flex flex-col gap-10">
+					{!filtersActive ? (
+						<FeaturedArticle
+							article={filtered[0]}
+							locale={locale}
+							dictionary={dictionary}
+							priority
+						/>
+					) : null}
+
+					{(filtersActive ? filtered : filtered.slice(1)).length > 0 ? (
+						<ul className="divide-y divide-sand-200 border-y border-sand-200">
+							{(filtersActive ? filtered : filtered.slice(1)).map((article) => (
+								<li key={article.documentId}>
+									<ArticleRow article={article} locale={locale} dictionary={dictionary} />
+								</li>
+							))}
+						</ul>
+					) : null}
+				</div>
 			) : (
 				<EmptyState
 					title={dictionary.empty.title}
