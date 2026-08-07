@@ -55,7 +55,15 @@ Per content type:
 | Activities | **7 / 7** ✅ |
 | Album "Images" | **4 / 4** ✅ |
 | **Articles (news)** | **0 / 5** ❌ |
-| **Partners** | **0 / 10** ❌ |
+| **Partners** | **0 / 10** ❌ (6 now restored from bundled files — see below) |
+
+> **Partially mitigated.** Six of the ten partner logos also exist in
+> `apps/frontend/public/Images/partners`, and the site now prefers those bundled
+> files over the CMS. Those six render correctly today, server-side, with no
+> request to Railway. The other four, and all five article covers, still depend
+> on the CMS and fall back to initials or a neutral placeholder. **This does not
+> remove the need to fix the storage layer** — it only stops the site looking
+> broken while that happens.
 
 So every news article and every partner logo is broken, while projects and
 activities are fine. The failures are concentrated in two batches, which is

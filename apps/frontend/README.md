@@ -107,12 +107,34 @@ This is a watermarked Getty Images comp file: the overlay reads
 `gettyimages · FilippoBacci · 1498170916`. Publishing it would be copyright
 infringement. It should be deleted or replaced with a licensed image.
 
-**Superseded** — `Images/partners/*.png` duplicates logos that the CMS already
-serves, and the CMS set is larger (10 partners vs 6 files) and authoritative.
-`icons/facebook.png` and `icons/youtube.png` are ready to use as soon as real
-profile URLs are added to `socialLinks` in `lib/site.ts`. The create-next-app
-leftovers (`next.svg`, `vercel.svg`, `file.svg`, `globe.svg`, `window.svg`) are
-unused and can be deleted.
+**Partner logos** — `Images/partners/*.png` holds six genuine partner logos, and
+these are now the **preferred** source, ahead of the CMS. They are same-origin,
+hashed, immutably cacheable and carry a blur placeholder, and every partner logo
+in the CMS currently 404s. `lib/media.ts` maps them to CMS partners by a
+distinctive fragment of the partner's name, so an editor renaming an entry does
+not break the match:
+
+| File | Matches |
+|---|---|
+| `amsed.png` | AMSED |
+| `commune-asni.png` | Commune d'Asni |
+| `province-alhaouz.png` | Province d'Al Haouz |
+| `region-marrakech.png` | Wilaya de la région Marrakech-Safi |
+| `ministere-interieur.png` | Ministère de l'Intérieur |
+| `fmps.png` | Fondation Marocaine du préScolaire |
+
+The remaining four partners (INDH, Groupe Al Omrane, Association RIM, Entraide
+Nationale) have no bundled file and fall through to the CMS, then to their
+initials. Adding a logo for them is a matter of dropping a PNG in this folder and
+adding one line to `partnerLogoMatchers`.
+
+Note `ministere-interieur.png` is 797 KB for a 1024×695 image and should be
+re-encoded along with the photographs above.
+
+**Unused** — `icons/facebook.png` and `icons/youtube.png` are ready as soon as
+real profile URLs are added to `socialLinks` in `lib/site.ts`. The
+create-next-app leftovers (`next.svg`, `vercel.svg`, `file.svg`, `globe.svg`,
+`window.svg`) can be deleted.
 
 ## Content notes for the association
 

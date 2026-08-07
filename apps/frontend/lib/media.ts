@@ -7,6 +7,13 @@ import aidImage from "@/public/Images/recons1.jpg";
 import reliefImage from "@/public/Images/recons2.jpg";
 import medicalImage from "@/public/Images/Ev2.png";
 
+import amsedLogo from "@/public/Images/partners/amsed.png";
+import communeAsniLogo from "@/public/Images/partners/commune-asni.png";
+import fmpsLogo from "@/public/Images/partners/fmps.png";
+import ministereInterieurLogo from "@/public/Images/partners/ministere-interieur.png";
+import provinceAlHaouzLogo from "@/public/Images/partners/province-alhaouz.png";
+import regionMarrakechLogo from "@/public/Images/partners/region-marrakech.png";
+
 import type { CmsImage } from "@/lib/cms/types";
 import type { Dictionary } from "@/lib/i18n";
 
@@ -63,4 +70,37 @@ export const galleryPhotoOrder: LocalPhotoId[] = [
 
 export function localGalleryImages(dictionary: Dictionary): CmsImage[] {
 	return galleryPhotoOrder.map((id) => localImage(id, dictionary));
+}
+
+/**
+ * Locally bundled partner logos, matched to CMS partners by name.
+ *
+ * These are used only when the CMS logo cannot be loaded — which is currently
+ * always, because every partner logo referenced by Strapi 404s (see
+ * docs/AUDIT-AND-ROADMAP.md). Keeping the CMS as the first choice means the
+ * moment those uploads are restored, the CMS logo wins again with no code
+ * change.
+ *
+ * Matching is on a distinctive fragment of the partner's name rather than an id,
+ * so it survives an editor renaming or re-creating an entry. Six of the ten
+ * partners have a bundled logo; the rest fall through to their initials.
+ */
+const partnerLogoMatchers: { pattern: RegExp; logo: StaticImageData }[] = [
+	{ pattern: /amsed/, logo: amsedLogo },
+	{ pattern: /asni/, logo: communeAsniLogo },
+	{ pattern: /haouz/, logo: provinceAlHaouzLogo },
+	{ pattern: /marrakech|wilaya/, logo: regionMarrakechLogo },
+	{ pattern: /interieur/, logo: ministereInterieurLogo },
+	{ pattern: /fmps|prescolaire/, logo: fmpsLogo },
+];
+
+export function localPartnerLogo(partnerName: string): StaticImageData | null {
+	// Strip accents and case so "préScolaire" and "Intérieur" match plain ASCII
+	// patterns, and Arabic names simply find no match.
+	const normalized = partnerName
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/\p{Diacritic}/gu, "");
+
+	return partnerLogoMatchers.find(({ pattern }) => pattern.test(normalized))?.logo ?? null;
 }

@@ -1,5 +1,6 @@
 import type { Partner } from "@/lib/cms/types";
 import { ImageWithFallback } from "@/components/ui/ImageWithFallback";
+import { localPartnerLogo } from "@/lib/media";
 
 type PartnerMarqueeProps = {
 	partners: Partner[];
@@ -56,6 +57,34 @@ function LogoItem({ partner, ariaHidden = false }: { partner: Partner; ariaHidde
 		</span>
 	);
 
+	/* Bundled logo preferred, then the CMS one, then the name — see PartnerCard. */
+	const bundled = localPartnerLogo(partner.name);
+	const imageClass =
+		"max-h-16 w-auto object-contain opacity-80 transition-opacity duration-300 hover:opacity-100";
+
+	const logo = bundled ? (
+		<ImageWithFallback
+			src={bundled}
+			alt={ariaHidden ? "" : partner.name}
+			sizes="144px"
+			placeholder="blur"
+			fallback={wordmark}
+			className={imageClass}
+		/>
+	) : partner.logo ? (
+		<ImageWithFallback
+			src={partner.logo.url}
+			alt={ariaHidden ? "" : partner.name}
+			width={partner.logo.width}
+			height={partner.logo.height}
+			sizes="144px"
+			fallback={wordmark}
+			className={imageClass}
+		/>
+	) : (
+		wordmark
+	);
+
 	return (
 		<li
 			aria-hidden={ariaHidden || undefined}
@@ -65,19 +94,7 @@ function LogoItem({ partner, ariaHidden = false }: { partner: Partner; ariaHidde
 				// duplicate pass would just show every logo twice.
 				(ariaHidden ? " motion-reduce:hidden" : "")
 			}>
-			{partner.logo ? (
-				<ImageWithFallback
-					src={partner.logo.url}
-					alt={ariaHidden ? "" : partner.name}
-					width={partner.logo.width}
-					height={partner.logo.height}
-					sizes="144px"
-					fallback={wordmark}
-					className="max-h-16 w-auto object-contain opacity-80 transition-opacity duration-300 hover:opacity-100"
-				/>
-			) : (
-				wordmark
-			)}
+			{logo}
 		</li>
 	);
 }
