@@ -7,12 +7,16 @@ import aidImage from "@/public/Images/recons1.jpg";
 import reliefImage from "@/public/Images/recons2.jpg";
 import medicalImage from "@/public/Images/Ev2.png";
 
+import alOmraneLogo from "@/public/Images/partners/al-omrane.png";
 import amsedLogo from "@/public/Images/partners/amsed.png";
 import communeAsniLogo from "@/public/Images/partners/commune-asni.png";
+import entraideNationaleLogo from "@/public/Images/partners/entraide-nationale.png";
 import fmpsLogo from "@/public/Images/partners/fmps.png";
+import indhLogo from "@/public/Images/partners/indh.jpg";
 import ministereInterieurLogo from "@/public/Images/partners/ministere-interieur.png";
 import provinceAlHaouzLogo from "@/public/Images/partners/province-alhaouz.png";
 import regionMarrakechLogo from "@/public/Images/partners/region-marrakech.png";
+import rimLogo from "@/public/Images/partners/rim.jpg";
 
 import type { CmsImage } from "@/lib/cms/types";
 import type { Dictionary } from "@/lib/i18n";
@@ -82,8 +86,12 @@ export function localGalleryImages(dictionary: Dictionary): CmsImage[] {
  * change.
  *
  * Matching is on a distinctive fragment of the partner's name rather than an id,
- * so it survives an editor renaming or re-creating an entry. Six of the ten
- * partners have a bundled logo; the rest fall through to their initials.
+ * so it survives an editor renaming or re-creating an entry. All ten partners
+ * now have a bundled logo; anything unmatched falls back to its initials.
+ *
+ * Patterns are deliberately narrow. "Nationale" for instance appears in both
+ * "L'INDH (Initiative Nationale...)" and "Entraide Nationale", so each is keyed
+ * on a word unique to it.
  */
 const partnerLogoMatchers: { pattern: RegExp; logo: StaticImageData }[] = [
 	{ pattern: /amsed/, logo: amsedLogo },
@@ -92,6 +100,10 @@ const partnerLogoMatchers: { pattern: RegExp; logo: StaticImageData }[] = [
 	{ pattern: /marrakech|wilaya/, logo: regionMarrakechLogo },
 	{ pattern: /interieur/, logo: ministereInterieurLogo },
 	{ pattern: /fmps|prescolaire/, logo: fmpsLogo },
+	{ pattern: /indh/, logo: indhLogo },
+	{ pattern: /omrane/, logo: alOmraneLogo },
+	{ pattern: /\brim\b/, logo: rimLogo },
+	{ pattern: /entraide/, logo: entraideNationaleLogo },
 ];
 
 export function localPartnerLogo(partnerName: string): StaticImageData | null {

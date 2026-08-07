@@ -48,7 +48,7 @@ export function ProjectRow({ project, locale, dictionary, reversed = false }: Pr
 				className="lg:w-[42%] lg:shrink-0"
 			/>
 
-			<div className="flex flex-1 flex-col gap-4 p-6 sm:p-8">
+			<div className="flex min-w-0 flex-1 flex-col gap-4 p-6 sm:p-8">
 				<div className="flex flex-wrap items-center gap-2">
 					<Badge tone={domainTone(project.domain)}>
 						{dictionary.projects.domains[project.domain]}

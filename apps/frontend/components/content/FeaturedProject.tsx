@@ -37,16 +37,23 @@ export function FeaturedProject({
 	return (
 		<article className="group/card relative overflow-hidden rounded-card bg-white shadow-card ring-1 ring-sand-300/70">
 			<div className="grid lg:grid-cols-[1.15fr_1fr]">
+				{/*
+				 * `lg:aspect-auto` matters: keeping the 4/3 ratio while the element is
+				 * also stretched to the row height makes the browser derive width from
+				 * height, so the photograph overflowed its column and covered the
+				 * heading. Above lg the frame simply stretches and the filled image
+				 * covers it; `min-w-0` stops either column expanding past its track.
+				 */}
 				<CmsPicture
 					image={project.cover}
 					ratio="4/3"
 					priority={priority}
 					zoomOnHover
 					sizes="(max-width: 1024px) 100vw, 55vw"
-					className="lg:h-full"
+					className="min-w-0 lg:aspect-auto lg:min-h-[26rem]"
 				/>
 
-				<div className="flex flex-col gap-5 p-7 sm:p-10">
+				<div className="flex min-w-0 flex-col gap-5 p-7 sm:p-10">
 					<div className="flex flex-wrap items-center gap-2">
 						{project.flagship ? (
 							<Badge tone="flagship">
