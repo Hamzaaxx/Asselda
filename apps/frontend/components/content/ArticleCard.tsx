@@ -8,6 +8,7 @@ import { formatDate } from "@/lib/taxonomy";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { CmsPicture } from "@/components/ui/CmsPicture";
+import { localArticlePhoto } from "@/lib/media";
 
 const categoryTones = {
 	news: "neutral",
@@ -29,7 +30,13 @@ export function ArticleCard({ article, locale, dictionary, priority }: ArticleCa
 
 	return (
 		<Card as="article" interactive accent={categoryTones[article.category]} className="h-full">
-			<CmsPicture image={article.cover} ratio="16/9" priority={priority} zoomOnHover />
+			{/* Bundled photo preferred — see FeaturedArticle. */}
+			<CmsPicture
+				image={localArticlePhoto(article.slug, dictionary) ?? article.cover}
+				ratio="16/9"
+				priority={priority}
+				zoomOnHover
+			/>
 
 			<div className="flex flex-1 flex-col gap-3 p-6">
 				<div className="flex flex-wrap items-center gap-3">

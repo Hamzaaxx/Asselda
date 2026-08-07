@@ -6,6 +6,7 @@ import { localizePath, type Locale } from "@/lib/i18n/config";
 import { formatDate } from "@/lib/taxonomy";
 import { Badge } from "@/components/ui/Badge";
 import { CmsPicture } from "@/components/ui/CmsPicture";
+import { localArticlePhoto } from "@/lib/media";
 
 const categoryTones = {
 	news: "neutral",
@@ -36,7 +37,8 @@ export function ArticleRow({ article, locale, dictionary }: ArticleRowProps) {
 	return (
 		<article className="group/card relative flex items-start gap-5 py-6">
 			<CmsPicture
-				image={article.cover}
+				/* Bundled photo preferred — see FeaturedArticle. */
+				image={localArticlePhoto(article.slug, dictionary) ?? article.cover}
 				ratio="1/1"
 				zoomOnHover
 				sizes="112px"

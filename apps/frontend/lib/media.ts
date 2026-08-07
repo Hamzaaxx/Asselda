@@ -106,6 +106,30 @@ const partnerLogoMatchers: { pattern: RegExp; logo: StaticImageData }[] = [
 	{ pattern: /entraide/, logo: entraideNationaleLogo },
 ];
 
+/**
+ * Stand-in photographs for articles whose CMS cover is unavailable.
+ *
+ * Only mapped where a bundled photograph genuinely depicts the article's
+ * subject — the treatment station for the article about the treatment station,
+ * the earthquake-damaged village for the article about reconstruction. The
+ * other articles have no honest match in `public/Images` (the only Awrach and
+ * general-assembly images there are stock photographs of a French street and a
+ * corporate boardroom), so they show the placeholder panel instead.
+ *
+ * This is a stopgap for the missing CMS media, not a replacement for it: a CMS
+ * cover always wins when one loads.
+ */
+const articlePhotoMatchers: { pattern: RegExp; id: LocalPhotoId }[] = [
+	{ pattern: /seisme|reconstruction/, id: "earthquake" },
+	{ pattern: /assainissement|station/, id: "treatment" },
+];
+
+export function localArticlePhoto(slug: string, dictionary: Dictionary): CmsImage | null {
+	const normalized = slug.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+	const match = articlePhotoMatchers.find(({ pattern }) => pattern.test(normalized));
+	return match ? localImage(match.id, dictionary) : null;
+}
+
 export function localPartnerLogo(partnerName: string): StaticImageData | null {
 	// Strip accents and case so "préScolaire" and "Intérieur" match plain ASCII
 	// patterns, and Arabic names simply find no match.

@@ -13,6 +13,7 @@ import { Container } from "@/components/ui/Container";
 import { Prose } from "@/components/ui/Prose";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { ArticleCard } from "@/components/content/ArticleCard";
+import { localArticlePhoto } from "@/lib/media";
 
 const categoryTones = {
 	news: "neutral",
@@ -79,6 +80,7 @@ export default async function ArticleDetailPage({
 	if (!article) notFound();
 
 	const published = formatDate(article.publishedAt, locale);
+	const coverImage = localArticlePhoto(article.slug, dictionary) ?? article.cover;
 
 	const related = (await getArticles(locale))
 		.filter((candidate) => candidate.documentId !== article.documentId)
@@ -117,11 +119,12 @@ export default async function ArticleDetailPage({
 					</Container>
 				</div>
 
-				{article.cover ? (
+				{/* Bundled photo preferred — see FeaturedArticle. */}
+				{coverImage ? (
 					<Container size="narrow" className="py-10">
 						<CmsPicture
-							image={article.cover}
-							ratio="16/9"
+							image={coverImage}
+							ratio="3/2"
 							priority
 							sizes="(max-width: 768px) 100vw, 768px"
 							className="rounded-card shadow-card"

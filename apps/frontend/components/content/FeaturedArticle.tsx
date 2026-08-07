@@ -7,6 +7,7 @@ import { localizePath, type Locale } from "@/lib/i18n/config";
 import { formatDate } from "@/lib/taxonomy";
 import { Badge } from "@/components/ui/Badge";
 import { CmsPicture } from "@/components/ui/CmsPicture";
+import { localArticlePhoto } from "@/lib/media";
 
 const categoryTones = {
 	news: "neutral",
@@ -38,14 +39,23 @@ export function FeaturedArticle({
 	const href = localizePath(`/actualites/${article.slug}`, locale);
 	const published = formatDate(article.publishedAt, locale);
 
+	/*
+	 * 3/2 rather than 16/9. At full page width a 16/9 frame is very tall, so an
+	 * article with no usable photograph became a huge empty panel dominating the
+	 * page. The shallower ratio keeps the lead story looking deliberate whether
+	 * or not it has an image.
+	 */
 	return (
 		<article className="group/card relative overflow-hidden rounded-card bg-white shadow-card ring-1 ring-sand-300/70">
 			<CmsPicture
-				image={article.cover}
-				ratio="16/9"
+				/* Bundled photo first: the CMS cover is not null, it is a URL that
+				   404s, so falling back on null would never fire. */
+				image={localArticlePhoto(article.slug, dictionary) ?? article.cover}
+				ratio="3/2"
 				priority={priority}
 				zoomOnHover
 				sizes="(max-width: 1152px) 100vw, 1152px"
+				className="max-h-[26rem]"
 			/>
 
 			<div className="flex flex-col gap-4 p-7 sm:p-10">

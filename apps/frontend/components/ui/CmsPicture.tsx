@@ -1,4 +1,4 @@
-import { ImageOff } from "lucide-react";
+import { Mountain } from "lucide-react";
 
 import type { CmsImage } from "@/lib/cms/types";
 import { cn } from "@/lib/cn";
@@ -48,9 +48,21 @@ export function CmsPicture({
 	sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
 	className,
 }: CmsPictureProps) {
+	/*
+	 * A designed panel rather than an error state.
+	 *
+	 * This stands in whenever a photograph is absent — no media set, or a URL
+	 * that fails, which is currently every news cover. A grey box with a
+	 * broken-image glyph reads as "this site is broken"; a branded panel with the
+	 * contour motif reads as "no photograph yet", which is the truth.
+	 */
 	const placeholder = (
-		<span className="absolute inset-0 flex items-center justify-center bg-sand-200 text-sand-500">
-			<ImageOff className="size-8" aria-hidden="true" />
+		<span className="absolute inset-0 flex items-center justify-center bg-linear-to-br from-forest-100 via-sand-100 to-clay-100">
+			<span
+				aria-hidden="true"
+				className="texture-contour absolute inset-0 opacity-[0.18]"
+			/>
+			<Mountain className="relative size-1/5 max-h-16 min-h-6 text-forest-700/25" aria-hidden="true" />
 		</span>
 	);
 
