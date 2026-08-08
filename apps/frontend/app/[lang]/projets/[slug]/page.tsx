@@ -12,7 +12,7 @@ import { CmsPicture } from "@/components/ui/CmsPicture";
 import { Container } from "@/components/ui/Container";
 import { Prose } from "@/components/ui/Prose";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { ProjectCard } from "@/components/content/ProjectCard";
+import { ProjectCard } from "@/components/projects/ProjectCard";
 
 /**
  * Detail pages are known at build time, so they prerender rather than rendering

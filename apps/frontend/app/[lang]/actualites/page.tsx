@@ -5,8 +5,8 @@ import { getDictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { buildPageMetadata } from "@/lib/metadata";
 import { Section } from "@/components/ui/Section";
-import { PageHero } from "@/components/content/PageHero";
-import { ArticlesExplorer } from "@/components/content/ArticlesExplorer";
+import { PageHero } from "@/components/sections/PageHero";
+import { ArticlesExplorer } from "@/components/articles/ArticlesExplorer";
 import { generateLocaleParams } from "@/lib/i18n/static-params";
 import { localPhotos } from "@/lib/media";
 

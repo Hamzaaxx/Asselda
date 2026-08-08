@@ -8,8 +8,8 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
-import { PageHero } from "@/components/content/PageHero";
-import { ProjectsExplorer } from "@/components/content/ProjectsExplorer";
+import { PageHero } from "@/components/sections/PageHero";
+import { ProjectsExplorer } from "@/components/projects/ProjectsExplorer";
 import { generateLocaleParams } from "@/lib/i18n/static-params";
 import { localPhotos } from "@/lib/media";
 

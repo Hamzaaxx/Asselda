@@ -12,7 +12,7 @@ import { CmsPicture } from "@/components/ui/CmsPicture";
 import { Container } from "@/components/ui/Container";
 import { Prose } from "@/components/ui/Prose";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { ArticleCard } from "@/components/content/ArticleCard";
+import { ArticleCard } from "@/components/articles/ArticleCard";
 import { localArticlePhoto } from "@/lib/media";
 
 const categoryTones = {

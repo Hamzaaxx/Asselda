@@ -8,7 +8,7 @@ import { contact, mapLinks } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Section, SectionHeading } from "@/components/ui/Section";
-import { PageHero } from "@/components/content/PageHero";
+import { PageHero } from "@/components/sections/PageHero";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { generateLocaleParams } from "@/lib/i18n/static-params";
 

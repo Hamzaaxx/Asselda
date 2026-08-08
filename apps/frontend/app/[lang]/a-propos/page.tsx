@@ -8,12 +8,12 @@ import { buildPageMetadata } from "@/lib/metadata";
 import { generateLocaleParams } from "@/lib/i18n/static-params";
 import { ButtonLink } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { Timeline } from "@/components/content/Timeline";
-import { AboutHero } from "@/components/content/about/AboutHero";
-import { AboutIdentity, AboutManifesto } from "@/components/content/about/AboutManifesto";
-import { AboutObjectives, AboutValues } from "@/components/content/about/AboutPrinciples";
-import { AboutBureau } from "@/components/content/about/AboutBureau";
-import { AboutDocuments } from "@/components/content/about/AboutDocuments";
+import { Timeline } from "@/components/sections/Timeline";
+import { AboutHero } from "@/components/about/AboutHero";
+import { AboutIdentity, AboutManifesto } from "@/components/about/AboutManifesto";
+import { AboutObjectives, AboutValues } from "@/components/about/AboutPrinciples";
+import { AboutBureau } from "@/components/about/AboutBureau";
+import { AboutDocuments } from "@/components/about/AboutDocuments";
 
 /** Prerender this page in every locale. */
 export const generateStaticParams = generateLocaleParams;

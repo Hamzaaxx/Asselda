@@ -8,11 +8,11 @@ import { ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Section, SectionHeading } from "@/components/ui/Section";
 import { TranslationNotice } from "@/components/ui/TranslationNotice";
-import { HomeHero } from "@/components/content/HomeHero";
-import { StatsBand } from "@/components/content/StatsBand";
-import { FeaturedProject } from "@/components/content/FeaturedProject";
-import { ArticleRow } from "@/components/content/ArticleRow";
-import { PartnerMarquee } from "@/components/content/PartnerMarquee";
+import { HomeHero } from "@/components/home/HomeHero";
+import { StatsBand } from "@/components/home/StatsBand";
+import { FeaturedProject } from "@/components/projects/FeaturedProject";
+import { ArticleRow } from "@/components/articles/ArticleRow";
+import { PartnerMarquee } from "@/components/partners/PartnerMarquee";
 import { generateLocaleParams } from "@/lib/i18n/static-params";
 
 /** Prerender this page in every locale. */

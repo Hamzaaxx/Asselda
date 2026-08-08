@@ -4,8 +4,8 @@ import { getDictionary } from "@/lib/i18n";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { buildPageMetadata } from "@/lib/metadata";
 import { contact } from "@/lib/site";
-import { PageHero } from "@/components/content/PageHero";
-import { LegalDocument } from "@/components/content/LegalDocument";
+import { PageHero } from "@/components/sections/PageHero";
+import { LegalDocument } from "@/components/sections/LegalDocument";
 import { generateLocaleParams } from "@/lib/i18n/static-params";
 
 /** Prerender this page in every locale. */

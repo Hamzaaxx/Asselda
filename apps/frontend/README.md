@@ -32,11 +32,30 @@ lib/
   navigation.ts      the site's information architecture, in one list
   site.ts            association facts not held in the CMS
 components/
-  ui/                Button Card Badge FilterPills Section EmptyState Prose …
-  layout/            Header Footer LanguageSwitcher
-  content/           cards, explorers, timeline, hero, marquee
+  ui/                domain-free primitives: Button Card Badge Section
+                     FilterPills EmptyState Prose CmsPicture Skeleton …
+  layout/            site chrome: Header Footer LanguageSwitcher
+  sections/          page blocks used across routes: PageHero Timeline
+                     LegalDocument
   forms/             ContactForm MembershipForm Field FormStatus
+  home/              HomeHero StatsBand
+  about/             the About page's purpose-built sections
+  projects/          FeaturedProject ProjectRow ProjectCard ProjectsExplorer
+  articles/          FeaturedArticle ArticleRow ArticleCard ArticlesExplorer
+  partners/          PartnerCard PartnerMarquee PartnersExplorer
+  activities/        ActivityCard ActivitiesExplorer
+  gallery/           GalleryExplorer
 ```
+
+Components are grouped by **domain**, not by shape. Everything that renders a
+project lives in `projects/`, so adding a field means opening one folder rather
+than hunting through a flat list. `ui/` holds only pieces with no knowledge of
+the CMS; `sections/` holds page-level blocks shared by several routes.
+
+Each domain folder follows the same pattern where it applies: a `…Explorer`
+(client component owning filter state), plus the presentational pieces it
+renders — a `Featured…` at full editorial weight, a `…Row` for lists, a `…Card`
+for grids.
 
 ### Adding a page
 
