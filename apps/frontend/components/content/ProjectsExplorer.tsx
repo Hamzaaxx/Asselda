@@ -9,6 +9,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPills, type FilterOption } from "@/components/ui/FilterPills";
+import { TranslationNotice } from "@/components/ui/TranslationNotice";
 import { FeaturedProject } from "./FeaturedProject";
 import { ProjectRow } from "./ProjectRow";
 
@@ -92,6 +93,8 @@ export function ProjectsExplorer({ projects, locale, dictionary }: ProjectsExplo
 
 	return (
 		<div className="flex flex-col gap-10">
+			<TranslationNotice items={projects} dictionary={dictionary} />
+
 			{/* A single-option filter row would be decoration, not a control. */}
 			{statusOptions.length > 2 ? (
 				<FilterPills

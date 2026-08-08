@@ -98,6 +98,9 @@ export const fr = {
 		previous: "Précédent",
 		next: "Suivant",
 		filterBy: "Filtrer par",
+		/** Shown when content is borrowed from the default locale. */
+		translationNotice:
+			"Une partie de ce contenu n'a pas encore été traduite et s'affiche en français.",
 		all: "Tous",
 		required: "Champ obligatoire",
 		optional: "facultatif",

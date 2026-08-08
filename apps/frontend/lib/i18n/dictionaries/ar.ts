@@ -90,6 +90,7 @@ export const ar: Dictionary = {
 		previous: "السابق",
 		next: "التالي",
 		filterBy: "تصفية حسب",
+		translationNotice: "لم يُترجم جزء من هذا المحتوى بعد، ويُعرض هنا بالفرنسية.",
 		all: "الكل",
 		required: "حقل إلزامي",
 		optional: "اختياري",

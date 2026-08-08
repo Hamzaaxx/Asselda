@@ -17,7 +17,7 @@ can be re-checked.
 | 2 | Broken images render as broken icons instead of a fallback | High | Frontend | 1 hour |
 | 3 | Four source photos are ~10× oversized | Medium | Content | 30 min |
 | 4 | Seven pages still use the generic hero + card-grid template | Medium | Frontend | 2–3 days |
-| 5 | English CMS content is empty | Medium | Association | Ongoing |
+| 5 | ~~English CMS content is empty~~ — mitigated by locale fallback; real translations still wanted | Low | Association | Ongoing |
 | 6 | `docs/` describes a NextAuth/RBAC system that does not exist | Low | Cleanup | 30 min |
 
 ---

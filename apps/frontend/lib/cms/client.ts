@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Locale } from "@/lib/i18n/config";
+import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import type {
 	RawActivity,
 	RawAlbum,
@@ -143,9 +143,10 @@ const ALBUM_CATEGORIES = [
 	"volunteers",
 ] as const;
 
-function normalizeProject(raw: RawProject): Project {
+function normalizeProject({ raw, untranslated }: Localized<RawProject>): Project {
 	const title = text(raw.title);
 	return {
+		untranslated,
 		id: raw.id,
 		documentId: raw.documentId,
 		slug: text(raw.slug),
@@ -167,9 +168,10 @@ function normalizeProject(raw: RawProject): Project {
 	};
 }
 
-function normalizePartner(raw: RawPartner): Partner {
+function normalizePartner({ raw, untranslated }: Localized<RawPartner>): Partner {
 	const name = text(raw.name);
 	return {
+		untranslated,
 		id: raw.id,
 		documentId: raw.documentId,
 		order: raw.order ?? Number.MAX_SAFE_INTEGER,
@@ -183,9 +185,10 @@ function normalizePartner(raw: RawPartner): Partner {
 	};
 }
 
-function normalizeActivity(raw: RawActivity): Activity {
+function normalizeActivity({ raw, untranslated }: Localized<RawActivity>): Activity {
 	const title = text(raw.title);
 	return {
+		untranslated,
 		id: raw.id,
 		documentId: raw.documentId,
 		slug: text(raw.slug),
@@ -197,9 +200,10 @@ function normalizeActivity(raw: RawActivity): Activity {
 	};
 }
 
-function normalizeArticle(raw: RawArticle): Article {
+function normalizeArticle({ raw, untranslated }: Localized<RawArticle>): Article {
 	const title = text(raw.title);
 	return {
+		untranslated,
 		id: raw.id,
 		documentId: raw.documentId,
 		slug: text(raw.slug),
@@ -212,9 +216,10 @@ function normalizeArticle(raw: RawArticle): Article {
 	};
 }
 
-function normalizeAlbum(raw: RawAlbum): Album {
+function normalizeAlbum({ raw, untranslated }: Localized<RawAlbum>): Album {
 	const title = text(raw.title);
 	return {
+		untranslated,
 		id: raw.id,
 		documentId: raw.documentId,
 		slug: text(raw.slug),
@@ -227,8 +232,9 @@ function normalizeAlbum(raw: RawAlbum): Album {
 	};
 }
 
-function normalizeTimelineEntry(raw: RawTimelineEvent): TimelineEntry {
+function normalizeTimelineEntry({ raw, untranslated }: Localized<RawTimelineEvent>): TimelineEntry {
 	return {
+		untranslated,
 		id: raw.id,
 		documentId: raw.documentId,
 		startYear: raw.startYear ?? 0,
@@ -238,7 +244,7 @@ function normalizeTimelineEntry(raw: RawTimelineEvent): TimelineEntry {
 }
 
 // ---------------------------------------------------------------------------
-// Queries
+// Locale fallback
 // ---------------------------------------------------------------------------
 
 const collectionQuery = (locale: Locale) => ({
@@ -247,9 +253,62 @@ const collectionQuery = (locale: Locale) => ({
 	"pagination[pageSize]": 100,
 });
 
+/** A raw entry plus whether it had to be borrowed from the default locale. */
+type Localized<T> = { raw: T; untranslated: boolean };
+
+/**
+ * Fetch a collection, filling gaps from the default locale.
+ *
+ * The CMS is populated in French and Arabic; English has effectively nothing.
+ * Requesting `locale=en` therefore returned empty arrays and every English page
+ * rendered an empty state — a site that looks broken rather than one that is
+ * merely awaiting translation.
+ *
+ * This takes the default locale as the spine of what exists, overlays whatever
+ * the requested locale actually has, and marks the remainder as untranslated so
+ * the page can say so plainly. Genuine translations share a `documentId` across
+ * locales, which is what makes the overlay reliable.
+ *
+ * Entries that exist only in the requested locale are kept rather than dropped —
+ * silently discarding content because it has no French counterpart would be the
+ * wrong default, even though the only such entry today is test data.
+ */
+async function fetchLocalized<T extends { documentId: string }>(
+	endpoint: string,
+	locale: Locale,
+	query: Query,
+): Promise<Localized<T>[]> {
+	if (locale === defaultLocale) {
+		const rows = await fetchCollection<T>(endpoint, { ...query, locale });
+		return rows.map((raw) => ({ raw, untranslated: false }));
+	}
+
+	const [translated, fallback] = await Promise.all([
+		fetchCollection<T>(endpoint, { ...query, locale }),
+		fetchCollection<T>(endpoint, { ...query, locale: defaultLocale }),
+	]);
+
+	const byDocumentId = new Map(translated.map((row) => [row.documentId, row]));
+
+	const merged: Localized<T>[] = fallback.map((base) => {
+		const match = byDocumentId.get(base.documentId);
+		return match ? { raw: match, untranslated: false } : { raw: base, untranslated: true };
+	});
+
+	const knownIds = new Set(fallback.map((row) => row.documentId));
+	const localeOnly = translated
+		.filter((row) => !knownIds.has(row.documentId))
+		.map((raw) => ({ raw, untranslated: false }));
+
+	return [...merged, ...localeOnly];
+}
+
+// ---------------------------------------------------------------------------
+// Queries
+// ---------------------------------------------------------------------------
+
 export async function getProjects(locale: Locale): Promise<Project[]> {
-	const raw = await fetchCollection<RawProject>("projects", {
-		locale,
+	const raw = await fetchLocalized<RawProject>("projects", locale, {
 		"pagination[pageSize]": 100,
 		// Explicit populate rather than `*`, so a detail page can reach the
 		// project's album images — `populate=*` stops one level deep.
@@ -269,12 +328,12 @@ export async function getProjectBySlug(slug: string, locale: Locale): Promise<Pr
 }
 
 export async function getActivities(locale: Locale): Promise<Activity[]> {
-	const raw = await fetchCollection<RawActivity>("activities", collectionQuery(locale));
+	const raw = await fetchLocalized<RawActivity>("activities", locale, collectionQuery(locale));
 	return raw.map(normalizeActivity).sort((a, b) => a.title.localeCompare(b.title, locale));
 }
 
 export async function getArticles(locale: Locale): Promise<Article[]> {
-	const raw = await fetchCollection<RawArticle>("articles", collectionQuery(locale));
+	const raw = await fetchLocalized<RawArticle>("articles", locale, collectionQuery(locale));
 	return raw.map(normalizeArticle).sort((a, b) => {
 		const aTime = a.publishedAt ? Date.parse(a.publishedAt) : 0;
 		const bTime = b.publishedAt ? Date.parse(b.publishedAt) : 0;
@@ -288,12 +347,12 @@ export async function getArticleBySlug(slug: string, locale: Locale): Promise<Ar
 }
 
 export async function getPartners(locale: Locale): Promise<Partner[]> {
-	const raw = await fetchCollection<RawPartner>("partners", collectionQuery(locale));
+	const raw = await fetchLocalized<RawPartner>("partners", locale, collectionQuery(locale));
 	return raw.map(normalizePartner).sort((a, b) => a.order - b.order);
 }
 
 export async function getAlbums(locale: Locale): Promise<Album[]> {
-	const raw = await fetchCollection<RawAlbum>("albums", collectionQuery(locale));
+	const raw = await fetchLocalized<RawAlbum>("albums", locale, collectionQuery(locale));
 	return raw.map(normalizeAlbum).sort((a, b) => {
 		const aTime = a.date ? Date.parse(a.date) : 0;
 		const bTime = b.date ? Date.parse(b.date) : 0;
@@ -308,6 +367,6 @@ export async function getAlbums(locale: Locale): Promise<Album[]> {
  * which the previous implementation rendered verbatim.
  */
 export async function getTimeline(locale: Locale): Promise<TimelineEntry[]> {
-	const raw = await fetchCollection<RawTimelineEvent>("timeline-events", collectionQuery(locale));
+	const raw = await fetchLocalized<RawTimelineEvent>("timeline-events", locale, collectionQuery(locale));
 	return raw.map(normalizeTimelineEntry).sort((a, b) => a.startYear - b.startYear);
 }

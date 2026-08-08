@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPills, type FilterOption } from "@/components/ui/FilterPills";
+import { TranslationNotice } from "@/components/ui/TranslationNotice";
 import { ActivityCard } from "./ActivityCard";
 
 type DomainFilter = ActivityDomain | "all";
@@ -54,6 +55,8 @@ export function ActivitiesExplorer({ activities, locale, dictionary }: Activitie
 
 	return (
 		<div className="flex flex-col gap-10">
+			<TranslationNotice items={activities} dictionary={dictionary} />
+
 			{options.length > 2 ? (
 				<FilterPills
 					label={dictionary.activities.filterLabel}

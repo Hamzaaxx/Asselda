@@ -7,6 +7,7 @@ import type { Dictionary } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n/config";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPills, type FilterOption } from "@/components/ui/FilterPills";
+import { TranslationNotice } from "@/components/ui/TranslationNotice";
 import { PartnerCard } from "./PartnerCard";
 
 type CategoryFilter = PartnerCategory | "all";
@@ -71,6 +72,8 @@ export function PartnersExplorer({ partners, locale, dictionary }: PartnersExplo
 
 	return (
 		<div className="flex flex-col gap-12">
+			<TranslationNotice items={partners} dictionary={dictionary} />
+
 			{options.length > 2 ? (
 				<FilterPills
 					label={dictionary.partners.filterLabel}

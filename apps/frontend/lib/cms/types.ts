@@ -37,7 +37,16 @@ export type CmsImage = {
 	thumbnailUrl: string | null;
 };
 
-export type Project = {
+/**
+ * Present on every content type.
+ *
+ * `true` when the entry had no version in the requested locale and was borrowed
+ * from the default locale, so the page can say so rather than silently showing
+ * French to someone who asked for English.
+ */
+export type Translatable = { untranslated: boolean };
+
+export type Project = Translatable & {
 	id: number;
 	documentId: string;
 	slug: string;
@@ -60,7 +69,7 @@ export type PartnerSummary = {
 	name: string;
 };
 
-export type Partner = {
+export type Partner = Translatable & {
 	id: number;
 	documentId: string;
 	order: number;
@@ -73,7 +82,7 @@ export type Partner = {
 	projectCount: number;
 };
 
-export type Activity = {
+export type Activity = Translatable & {
 	id: number;
 	documentId: string;
 	slug: string;
@@ -86,7 +95,7 @@ export type Activity = {
 	cover: CmsImage | null;
 };
 
-export type Article = {
+export type Article = Translatable & {
 	id: number;
 	documentId: string;
 	slug: string;
@@ -99,7 +108,7 @@ export type Article = {
 	cover: CmsImage | null;
 };
 
-export type Album = {
+export type Album = Translatable & {
 	id: number;
 	documentId: string;
 	slug: string;
@@ -109,7 +118,7 @@ export type Album = {
 	images: CmsImage[];
 };
 
-export type TimelineEntry = {
+export type TimelineEntry = Translatable & {
 	id: number;
 	documentId: string;
 	startYear: number;

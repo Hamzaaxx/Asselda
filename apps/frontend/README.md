@@ -141,8 +141,17 @@ create-next-app leftovers (`next.svg`, `vercel.svg`, `file.svg`, `globe.svg`,
 These are content gaps, not code issues:
 
 - **English is nearly empty in the CMS** (no projects, articles or albums). The
-  English site renders designed empty states pointing readers to French and
-  Arabic. It fills in automatically as entries are translated.
+  site no longer shows empty English pages: `lib/cms/client.ts` takes the
+  default locale as the spine of what exists, overlays whatever the requested
+  locale actually has, and marks the remainder as `untranslated` so a notice can
+  explain the French text. Entries fill in automatically as the association
+  translates them — a CMS translation always wins over the fallback.
+- **Two junk entries sit in the English locale** and should be deleted in Strapi:
+  an activity titled "Lead Creative Planner" (its description is that phrase
+  repeated) and a partner whose fields are still French. The activity has no
+  French counterpart, so it appears as an extra card on the English activities
+  page. The fallback deliberately keeps locale-only entries rather than
+  discarding content it cannot match, so this is a content fix, not a code one.
 - **Media has no alternative text.** Every asset in Strapi has a null
   `alternativeText`, so images fall back to their parent entry's title. Adding
   alt text in Strapi improves accessibility immediately, with no code change.

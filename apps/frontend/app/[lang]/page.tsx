@@ -7,6 +7,7 @@ import { FOUNDING_YEAR, IMPACT_BENEFICIARIES } from "@/lib/site";
 import { ButtonLink } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Section, SectionHeading } from "@/components/ui/Section";
+import { TranslationNotice } from "@/components/ui/TranslationNotice";
 import { HomeHero } from "@/components/content/HomeHero";
 import { StatsBand } from "@/components/content/StatsBand";
 import { FeaturedProject } from "@/components/content/FeaturedProject";
@@ -112,6 +113,13 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 
 			{/* Flagship projects */}
 			<Section tone="white" size="wide">
+				{/* Said once here, covering the project and news sections below. */}
+				<TranslationNotice
+					items={[...featuredProjects, ...latestArticles]}
+					dictionary={dictionary}
+					className="mb-8"
+				/>
+
 				<div className="mb-10 flex flex-wrap items-end justify-between gap-4">
 					<SectionHeading
 						title={dictionary.home.projects.title}

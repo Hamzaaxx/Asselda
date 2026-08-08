@@ -98,6 +98,8 @@ export const en: Dictionary = {
 		previous: "Previous",
 		next: "Next",
 		filterBy: "Filter by",
+		translationNotice:
+			"Some of this content has not been translated yet and is shown in French.",
 		all: "All",
 		required: "Required field",
 		optional: "optional",

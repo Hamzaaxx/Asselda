@@ -16,6 +16,7 @@ import { format } from "@/lib/i18n";
 import type { Locale } from "@/lib/i18n/config";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPills, type FilterOption } from "@/components/ui/FilterPills";
+import { TranslationNotice } from "@/components/ui/TranslationNotice";
 
 type GalleryExplorerProps = {
 	albums: Album[];
@@ -120,6 +121,8 @@ export function GalleryExplorer({
 
 	return (
 		<div className="flex flex-col gap-10">
+			<TranslationNotice items={albums} dictionary={dictionary} />
+
 			{options.length > 2 ? (
 				<FilterPills
 					label={dictionary.gallery.filterLabel}

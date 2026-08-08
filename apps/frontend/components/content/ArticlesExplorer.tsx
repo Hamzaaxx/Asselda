@@ -9,6 +9,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { FilterPills, type FilterOption } from "@/components/ui/FilterPills";
+import { TranslationNotice } from "@/components/ui/TranslationNotice";
 import { FeaturedArticle } from "./FeaturedArticle";
 import { ArticleRow } from "./ArticleRow";
 
@@ -122,6 +123,8 @@ export function ArticlesExplorer({ articles, locale, dictionary }: ArticlesExplo
 				 * because the top match is a result, not an editorial choice.
 				 */
 				<div className="flex flex-col gap-10">
+			<TranslationNotice items={articles} dictionary={dictionary} />
+
 					{!filtersActive ? (
 						<FeaturedArticle
 							article={filtered[0]}
