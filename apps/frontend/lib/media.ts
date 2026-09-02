@@ -12,7 +12,7 @@ import amsedLogo from "@/public/Images/partners/amsed.png";
 import communeAsniLogo from "@/public/Images/partners/commune-asni.png";
 import entraideNationaleLogo from "@/public/Images/partners/entraide-nationale.png";
 import fmpsLogo from "@/public/Images/partners/fmps.png";
-import indhLogo from "@/public/Images/partners/indh.jpg";
+import indhLogo from "@/public/Images/partners/INDH.jpg";
 import ministereInterieurLogo from "@/public/Images/partners/ministere-interieur.png";
 import provinceAlHaouzLogo from "@/public/Images/partners/province-alhaouz.png";
 import regionMarrakechLogo from "@/public/Images/partners/region-marrakech.png";
